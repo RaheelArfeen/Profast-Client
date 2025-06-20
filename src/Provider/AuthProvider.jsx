@@ -1,5 +1,4 @@
 import React, { createContext, useEffect, useState } from "react";
-import app from "../Firebase/firebase.init";
 import {
   createUserWithEmailAndPassword,
   getAuth,
@@ -9,6 +8,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 import axios from "axios";
+import app from "../Firebase/Firebase.init";
 
 export const AuthContext = createContext();
 const auth = getAuth(app);
@@ -35,16 +35,19 @@ const AuthProvider = ({ children }) => {
         setUser(updatedUser);
         localStorage.setItem("user", JSON.stringify(updatedUser));
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Error updating profile:", error);
       });
   };
 
-
-
   const logOut = () => {
     setLoading(true);
-    return signOut(auth);
+    return signOut(auth)
+      .then(() => {
+        setUser(null);
+        localStorage.removeItem("user");
+      })
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => {
@@ -54,13 +57,15 @@ const AuthProvider = ({ children }) => {
         const userDatas = { displayName, email, photoURL, uid };
         setUser(userDatas);
         if (currentUser?.email) {
-          const userData = { email: currentUser.email }
-          axios.post('https://blog-craft-server.vercel.app/jwt', userData, {
-            withCredentials: true
-          })
-          .then(res => {
-            console.log(res.data);
-          }).catch(error => console.log(error))
+          const userData = { email: currentUser.email };
+          axios
+            .post("http://localhost:3000/jwt", userData, {
+              withCredentials: true,
+            })
+            .then((res) => {
+              console.log(res.data);
+            })
+            .catch((error) => console.log(error));
         }
         localStorage.setItem("user", JSON.stringify(userDatas));
       } else {
@@ -83,9 +88,7 @@ const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={authData}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={authData}>{children}</AuthContext.Provider>
   );
 };
 
