@@ -13,7 +13,7 @@ const slideVariant = {
 
 const Banner = () => {
     return (
-        <div className='max-w-[1800px] min-h-screen w-full mx-auto px-2 lg:px-12'>
+        <div className='max-w-[1800px] w-full mx-auto px-2 lg:px-12'>
             <motion.div
                 initial="hidden"
                 animate="visible"
