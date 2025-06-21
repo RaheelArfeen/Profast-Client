@@ -13,6 +13,7 @@ import TrackOrder from "../Pages/TrackOrder";
 import SignIn from "../Pages/SignIn";
 import ErrorPage from "../Pages/ErrorPage";
 import Register from "../Pages/Register";
+import ForgetPassword from "../Pages/ForgetPassword";
 
 export const router = createBrowserRouter([
     {
@@ -32,4 +33,5 @@ export const router = createBrowserRouter([
     },
     { path: '/signIn', Component: SignIn },
     { path: '/register', Component: Register },
+    { path: '/forgetPassword', Component: ForgetPassword },
 ]);

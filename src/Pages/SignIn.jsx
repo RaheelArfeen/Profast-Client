@@ -15,12 +15,25 @@ import { motion } from 'framer-motion';
 import logo from '../assets/assets/logo.png';
 import authImg from '../assets/assets/authImage.png';
 
-const Login = ({ onRegister }) => {
+const fadeVariant = {
+    hidden: { opacity: 0, y: 20 },
+    visible: (i = 0) => ({
+        opacity: 1,
+        y: 0,
+        transition: {
+            delay: i * 0.1,
+            duration: 0.4,
+        },
+    }),
+};
+
+const SignIn = ({ onRegister }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
+
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from?.pathname || '/';
@@ -137,41 +150,36 @@ const Login = ({ onRegister }) => {
                 transition={{ duration: 0.6 }}
                 className="flex-1 flex items-center justify-center px-6 md:px-12 py-10 relative"
             >
-                <div onClick={() => navigate('/')} className="flex items-center gap-2 absolute top-5 md:left-8 left-6 cursor-pointer">
-                    <motion.img
-                        initial={{ scale: 0.5, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ delay: 0.3 }}
-                        src={logo}
-                        alt="Logo"
-                        className="w-10"
-                    />
-                    <motion.h1
-                        initial={{ y: -10, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ delay: 0.4 }}
-                        className="urbanist text-2xl lg:text-3xl font-extrabold relative top-4 right-6.5"
-                    >
+                {/* Logo */}
+                <motion.div
+                    className="flex items-center gap-2 absolute top-5 md:left-8 left-6 cursor-pointer"
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                    onClick={() => navigate('/')}
+                >
+                    <motion.img src={logo} alt="Logo" className="w-10" />
+                    <motion.h1 className="urbanist text-2xl lg:text-3xl font-extrabold relative top-4 right-6.5">
                         Profast
                     </motion.h1>
-                </div>
+                </motion.div>
 
-                <div className="relative w-full max-w-md">
-                    <div className="mb-8 mt-16 lg:mt-0">
-                        <motion.h1
-                            initial={{ y: -20, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{ delay: 0.2 }}
-                            className="text-3xl font-bold text-gray-900 mb-2"
-                        >
-                            Welcome Back
-                        </motion.h1>
+                {/* Form Container */}
+                <motion.div
+                    className="relative w-full max-w-md"
+                    initial="hidden"
+                    animate="visible"
+                    variants={fadeVariant}
+                >
+                    {/* Header */}
+                    <motion.div variants={fadeVariant} custom={0}>
+                        <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
                         <p className="text-gray-600">Login with Profast</p>
-                    </div>
+                    </motion.div>
 
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <form onSubmit={handleSubmit} className="space-y-6 mt-8">
                         {/* Email */}
-                        <motion.div initial={{ x: -30, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.2 }}>
+                        <motion.div variants={fadeVariant} custom={1}>
                             <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
                             <input
                                 type="email"
@@ -185,7 +193,7 @@ const Login = ({ onRegister }) => {
                         </motion.div>
 
                         {/* Password */}
-                        <motion.div initial={{ x: 30, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
+                        <motion.div variants={fadeVariant} custom={2}>
                             <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
                             <div className="relative">
                                 <input
@@ -196,60 +204,78 @@ const Login = ({ onRegister }) => {
                                     required
                                     className={`w-full px-4 py-3 pr-12 border rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 ${errors.password ? 'border-red-500 focus:ring-red-300' : 'border-gray-300 focus:ring-green-500'} transition`}
                                 />
-                                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute inset-y-0 right-0 pr-4 text-gray-400 hover:text-gray-600">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute inset-y-0 right-0 pr-4 text-gray-400 hover:text-gray-600"
+                                >
                                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                                 </button>
                             </div>
                             {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
                         </motion.div>
 
-                        <div className="text-left">
-                            <button type="button" onClick={handleResetPassword} className="text-sm text-green-600 hover:text-green-700 font-medium">
+                        {/* Reset Password */}
+                        <motion.div variants={fadeVariant} custom={3} className="text-left">
+                            <button
+                                type="button"
+                                // onClick={() => navigate('/forgetPassword')}
+                                className="text-sm text-green-600 hover:text-green-700 font-medium"
+                            >
                                 Forget Password?
                             </button>
-                        </div>
+                        </motion.div>
 
+                        {/* Login Button */}
                         <motion.button
-                            whileHover={{ scale: 1.03 }}
-                            whileTap={{ scale: 0.97 }}
                             type="submit"
                             disabled={loading}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            variants={fadeVariant}
+                            custom={4}
                             className={`w-full ${loading ? 'bg-green-400' : 'bg-green-500 hover:bg-green-600'} text-white font-semibold py-4 px-6 rounded-lg transition-all duration-200`}
                         >
-                            {loading ? 'Logging in...' : 'Login'}
+                            {loading ? 'Signing in...' : 'Sign In'}
                         </motion.button>
 
-                        <div className="text-center">
+                        {/* Register Redirect */}
+                        <motion.div className="text-center" variants={fadeVariant} custom={5}>
                             <span className="text-gray-600">Don't have an account? </span>
                             <Link to="/register" onClick={onRegister} className="text-green-600 hover:text-green-700 font-medium">
                                 Register
                             </Link>
-                        </div>
+                        </motion.div>
 
-                        <div className="relative my-8">
+                        {/* Divider */}
+                        <motion.div className="relative my-8" variants={fadeVariant} custom={6}>
                             <div className="absolute inset-0 flex items-center">
                                 <div className="w-full border-t border-gray-300"></div>
                             </div>
                             <div className="relative flex justify-center text-sm">
                                 <span className="bg-white px-4 text-gray-500">Or</span>
                             </div>
-                        </div>
+                        </motion.div>
 
+                        {/* Google Login */}
                         <motion.button
-                            whileHover={{ scale: 1.02 }}
                             type="button"
                             onClick={handleGoogleLogin}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.97 }}
+                            variants={fadeVariant}
+                            custom={7}
                             className={`w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-4 px-6 rounded-lg flex items-center justify-center space-x-3 border border-gray-300 ${loading ? 'opacity-70' : ''}`}
                         >
                             <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <g clip-path="url(#clip0_2074_587)">
-                                    <path d="M20.5002 10.2297C20.5002 9.54989 20.444 8.86644 20.324 8.19769H10.7008V12.0485H16.2115C15.9829 13.2905 15.2481 14.3891 14.1722 15.0873V17.5859H17.4599C19.3905 15.8442 20.5002 13.2721 20.5002 10.2297Z" fill="#1C71FF" />
-                                    <path d="M10.7006 19.9999C13.4523 19.9999 15.7728 19.1143 17.4635 17.5857L14.1758 15.0871C13.2611 15.6971 12.0802 16.0425 10.7044 16.0425C8.04273 16.0425 5.78593 14.2824 4.97619 11.9161H1.5835V14.4919C3.31546 17.8687 6.8431 19.9999 10.7006 19.9999Z" fill="#34A853" />
-                                    <path d="M4.97264 11.9162C4.54527 10.6742 4.54527 9.3294 4.97264 8.08744V5.51166H1.5837C0.136651 8.3373 0.136651 11.6663 1.5837 14.492L4.97264 11.9162Z" fill="#FBBC04" />
-                                    <path d="M10.7006 3.95732C12.1552 3.93527 13.561 4.47174 14.6144 5.45649L17.5273 2.60145C15.6828 0.903854 13.2349 -0.0294541 10.7006 -5.85339e-05C6.8431 -5.85339e-05 3.31546 2.13112 1.5835 5.5116L4.97244 8.08739C5.77844 5.71737 8.03898 3.95732 10.7006 3.95732Z" fill="#EA4335" />
+                                <g clipPath="url(#clip0)">
+                                    <path d="M20.5 10.23c0-.68-.06-1.36-.18-2.03H10.7v3.85h5.51c-.23 1.24-.96 2.34-2.04 3.04v2.5h3.29c1.93-1.74 3.04-4.31 3.04-7.36z" fill="#1C71FF" />
+                                    <path d="M10.7 20c2.75 0 5.07-.89 6.76-2.41l-3.29-2.5c-.91.6-2.09.95-3.47.95-2.66 0-4.91-1.76-5.72-4.14H1.58v2.58C3.31 17.87 6.84 20 10.7 20z" fill="#34A853" />
+                                    <path d="M4.97 11.92A6.992 6.992 0 014.97 8.09V5.51H1.58A10.01 10.01 0 000.5 10c0 1.77.44 3.44 1.58 4.49l3.39-2.57z" fill="#FBBC04" />
+                                    <path d="M10.7 3.96c1.45-.02 2.86.53 3.91 1.5l2.91-2.86C15.68.9 13.23-.03 10.7 0 6.84 0 3.31 2.13 1.58 5.51l3.39 2.58C5.78 5.72 8.04 3.96 10.7 3.96z" fill="#EA4335" />
                                 </g>
                                 <defs>
-                                    <clipPath id="clip0_2074_587">
+                                    <clipPath id="clip0">
                                         <rect width="20" height="20" fill="white" transform="translate(0.5)" />
                                     </clipPath>
                                 </defs>
@@ -257,7 +283,7 @@ const Login = ({ onRegister }) => {
                             <span>{loading ? 'Logging in...' : 'Login with Google'}</span>
                         </motion.button>
                     </form>
-                </div>
+                </motion.div>
             </motion.div>
 
             {/* Right Side Illustration */}
@@ -280,4 +306,4 @@ const Login = ({ onRegister }) => {
     );
 };
 
-export default Login;
+export default SignIn;

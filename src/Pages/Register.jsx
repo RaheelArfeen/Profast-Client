@@ -77,7 +77,7 @@ const Register = () => {
             try {
                 const res = await axios.post('http://localhost:3000/users', userData);
                 if (res.status === 200 || res.status === 201) return true;
-                throw new Error('Backend rejected user');
+                throw new Error('404 error cannot login');
             } catch {
                 await deleteUser(user);
                 throw new Error('Something went wrong while setting up your account. Please try again.');
@@ -95,7 +95,7 @@ const Register = () => {
             toast.success('Successfully registered with Google');
             navigate(from, { replace: true });
         } catch (error) {
-            toast.error(error.message || 'Google registration failed');
+            toast.error('Google registration failed');
         } finally {
             setLoading(false);
         }
@@ -249,7 +249,7 @@ const Register = () => {
                         {/* Login redirect */}
                         <motion.div className="text-center" variants={fadeVariant} custom={7}>
                             <span className="text-gray-600">Already have an account? </span>
-                            <Link to="/login" className="text-green-600 hover:text-green-700 font-medium">Login</Link>
+                            <Link to="/signIn" className="text-green-600 hover:text-green-700 font-medium">Sign In</Link>
                         </motion.div>
 
                         {/* Divider */}
