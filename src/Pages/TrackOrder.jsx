@@ -3,7 +3,7 @@ import React from 'react';
 const TrackOrder = () => {
     return (
         <div>
-            trancOrder
+            TrackOrder
         </div>
     );
 };

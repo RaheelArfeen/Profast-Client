@@ -14,6 +14,7 @@ import SignIn from "../Pages/SignIn";
 import ErrorPage from "../Pages/ErrorPage";
 import Register from "../Pages/Register";
 import ForgetPassword from "../Pages/ForgetPassword";
+import Coverage from "../Pages/coverage";
 
 export const router = createBrowserRouter([
     {
@@ -25,6 +26,7 @@ export const router = createBrowserRouter([
             { path: '/track-order', Component: TrackOrder },
             { path: '/about-us', Component: AboutUs },
             { path: '/pricing', Component: Pricing },
+            { path: '/coverage', Component: Coverage, loader: () => fetch('./serviceCenter.json') },
             { path: '/be-a-rider', Component: BeARider },
             { path: '/blog', Component: Blog },
             { path: '/contact', Component: Contact },
@@ -32,6 +34,6 @@ export const router = createBrowserRouter([
         ]
     },
     { path: '/signIn', Component: SignIn },
-    { path: '/register', Component: Register },
+    { path: '/signUp', Component: Register },
     { path: '/forgetPassword', Component: ForgetPassword },
 ]);

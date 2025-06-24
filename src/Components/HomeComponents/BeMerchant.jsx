@@ -4,7 +4,7 @@ import locationMerchant from '../../assets/assets/location-merchant.png';
 
 const BeMerchant = () => {
     return (
-        <div className='max-w-[1800px] w-full mx-auto py-4 px-2 md:px-6 lg:px-12 py-12'>
+        <div className='max-w-[1800px] w-full mx-auto px-2 md:px-6 lg:px-12 py-12'>
             <div className='relative bg-[#03373D] rounded-3xl overflow-hidden'>
                 {/* Background Image */}
                 <img

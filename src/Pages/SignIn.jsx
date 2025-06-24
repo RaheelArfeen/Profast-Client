@@ -242,7 +242,7 @@ const SignIn = ({ onRegister }) => {
                         {/* Register Redirect */}
                         <motion.div className="text-center" variants={fadeVariant} custom={5}>
                             <span className="text-gray-600">Don't have an account? </span>
-                            <Link to="/register" onClick={onRegister} className="text-green-600 hover:text-green-700 font-medium">
+                            <Link to="/signUp" onClick={onRegister} className="text-green-600 hover:text-green-700 font-medium">
                                 Register
                             </Link>
                         </motion.div>

@@ -55,11 +55,12 @@ const Header = () => {
 
     const links = (
         <>
-            {['/', '/track-order', '/about-us', '/pricing', '/be-a-rider'].map((path, i) => {
+            {['/', '/track-order', '/coverage', '/about-us', '/pricing', '/be-a-rider'].map((path, i) => {
                 const label = {
                     '/': 'Home',
                     '/track-order': 'Track Order',
                     '/about-us': 'About Us',
+                    '/coverage': 'Coverage',
                     '/pricing': 'Pricing',
                     '/be-a-rider': 'Be A Rider',
                 }[path];
@@ -145,9 +146,9 @@ const Header = () => {
                                     }}
                                     whileTap={{ scale: 0.95 }}
                                     className="py-2 px-6 font-bold rounded-xl bg-[#CAEB66] text-[#1F1F1F]"
-                                    onClick={() => navigate('/be-a-rider')}
+                                    onClick={() => navigate('/signUp')}
                                 >
-                                    Be a Rider
+                                    Sign Up
                                 </motion.button>
                             </div>
                         ) : (
@@ -271,10 +272,10 @@ const Header = () => {
                                             className="py-2 px-4 font-bold rounded-xl bg-[#CAEB66] text-[#1F1F1F]"
                                             onClick={() => {
                                                 setIsOpen(false);
-                                                navigate('/be-a-rider');
+                                                navigate('/signUp');
                                             }}
                                         >
-                                            Be a Rider
+                                            Sign Up
                                         </motion.button>
                                     </div>
                                 ) : (
