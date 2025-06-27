@@ -5,3 +5,7 @@ body{
   background-color: #eaeced;
   font-family: "Urbanist", sans-serif;
 }
+
+*::-webkit-scrollbar{
+  display: none;
+}

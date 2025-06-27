@@ -33,44 +33,50 @@ const AuthProvider = ({ children }) => {
         const { displayName, email, photoURL, uid } = auth.currentUser;
         const updatedUser = { displayName, email, photoURL, uid };
         setUser(updatedUser);
-        localStorage.setItem("user", JSON.stringify(updatedUser));
       })
       .catch((error) => {
         console.error("Error updating profile:", error);
       });
   };
 
-  const logOut = () => {
+  // NEW logout function: call backend logout to clear JWT cookie AND sign out from Firebase
+  const logOut = async () => {
     setLoading(true);
-    return signOut(auth)
-      .then(() => {
-        setUser(null);
-        localStorage.removeItem("user");
-      })
-      .finally(() => setLoading(false));
+    try {
+      // Clear backend JWT cookie
+      await axios.post("http://localhost:3000/logout", {}, { withCredentials: true });
+      // Sign out Firebase
+      await signOut(auth);
+      setUser(null);
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setLoading(true);
       if (currentUser) {
         const { displayName, email, photoURL, uid } = currentUser;
         const userDatas = { displayName, email, photoURL, uid };
         setUser(userDatas);
-        if (currentUser?.email) {
-          const userData = { email: currentUser.email };
-          axios
-            .post("http://localhost:3000/jwt", userData, {
-              withCredentials: true,
-            })
-            .then((res) => {
-              console.log(res.data);
-            })
-            .catch((error) => console.log(error));
+
+        if (email) {
+          try {
+            // Send user email to backend login endpoint to get JWT cookie
+            await axios.post(
+              "http://localhost:3000/login",
+              { email },
+              { withCredentials: true }
+            );
+          } catch (error) {
+            console.error("Backend login error:", error);
+          }
         }
-        localStorage.setItem("user", JSON.stringify(userDatas));
       } else {
         setUser(null);
-        localStorage.removeItem("user");
       }
       setLoading(false);
     });
@@ -88,7 +94,9 @@ const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={authData}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={authData}>
+      {children}
+    </AuthContext.Provider>
   );
 };
 

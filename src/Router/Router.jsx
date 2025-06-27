@@ -3,11 +3,6 @@ import {
 } from "react-router";
 import Root from "../Root/Root";
 import Home from "../Pages/Home";
-import AboutUs from "../Pages/aboutUs";
-import Pricing from "../Pages/pricing";
-import BeARider from "../Pages/BeARider";
-import Blog from "../Pages/Blog";
-import Contact from "../Pages/Contact";
 import Profile from "../Pages/Profile";
 import TrackOrder from "../Pages/TrackOrder";
 import SignIn from "../Pages/SignIn";
@@ -17,6 +12,7 @@ import ForgetPassword from "../Pages/ForgetPassword";
 import Coverage from "../Pages/coverage";
 import AddParcel from "../Pages/AddParcel";
 import { ProtectedRoute } from "../Provider/ProtectedRoute"
+import Dashboard from "../Pages/Dashboard";
 
 export const router = createBrowserRouter([
     {
@@ -35,12 +31,12 @@ export const router = createBrowserRouter([
                 loader: () => fetch('./serviceCenter.json')
             },
             {
-                path: '/be-a-rider',
-                element: <ProtectedRoute> <BeARider /> </ProtectedRoute>
-            },
-            {
                 path: '/profile',
                 element: <ProtectedRoute> <Profile /> </ProtectedRoute>
+            },
+            {
+                path: '/dashboard',
+                element: <ProtectedRoute> <Dashboard /> </ProtectedRoute>
             },
             {
                 path: '/addParcel',
@@ -50,6 +46,6 @@ export const router = createBrowserRouter([
         ]
     },
     { path: '/signIn', Component: SignIn },
-    { path: '/signUp', Component: Register },
+    { path: '/register', Component: Register },
     { path: '/forgetPassword', Component: ForgetPassword },
 ]);

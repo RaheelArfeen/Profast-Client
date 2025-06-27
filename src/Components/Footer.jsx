@@ -10,7 +10,7 @@ const Footer = () => {
                 { to: "/", label: "Home" },
                 { to: "/addParcel", label: "Add Parcel" },
                 { to: "/coverage", label: "Coverage" },
-                { to: "/be-a-rider", label: "Be A Rider" },
+                { to: "/dashboard", label: "Dashboard" },
             ].map(({ to, label }, i) => (
                 <motion.div
                     key={i}
