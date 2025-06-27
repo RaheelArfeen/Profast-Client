@@ -7,12 +7,10 @@ const Footer = () => {
     const links = (
         <div className="flex flex-wrap justify-center gap-12 lg:gap-8 text-white text-sm lg:text-base">
             {[
-                { to: "/services", label: "Services" },
+                { to: "/", label: "Home" },
+                { to: "/addParcel", label: "Add Parcel" },
                 { to: "/coverage", label: "Coverage" },
-                { to: "/about-us", label: "About Us" },
-                { to: "/pricing", label: "Pricing" },
-                { to: "/blog", label: "Blog" },
-                { to: "/contact", label: "Contact" }
+                { to: "/be-a-rider", label: "Be A Rider" },
             ].map(({ to, label }, i) => (
                 <motion.div
                     key={i}

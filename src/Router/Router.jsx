@@ -15,6 +15,8 @@ import ErrorPage from "../Pages/ErrorPage";
 import Register from "../Pages/Register";
 import ForgetPassword from "../Pages/ForgetPassword";
 import Coverage from "../Pages/coverage";
+import AddParcel from "../Pages/AddParcel";
+import { ProtectedRoute } from "../Provider/ProtectedRoute"
 
 export const router = createBrowserRouter([
     {
@@ -23,14 +25,28 @@ export const router = createBrowserRouter([
         errorElement: <ErrorPage></ErrorPage>,
         children: [
             { index: true, path: '/', Component: Home },
-            { path: '/track-order', Component: TrackOrder },
-            { path: '/about-us', Component: AboutUs },
-            { path: '/pricing', Component: Pricing },
-            { path: '/coverage', Component: Coverage, loader: () => fetch('./serviceCenter.json') },
-            { path: '/be-a-rider', Component: BeARider },
-            { path: '/blog', Component: Blog },
-            { path: '/contact', Component: Contact },
-            { path: '/profile', Component: Profile },
+            {
+                path: '/track-order',
+                element: <ProtectedRoute> <TrackOrder /> </ProtectedRoute>
+            },
+            {
+                path: '/coverage',
+                element: <ProtectedRoute> <Coverage /> </ProtectedRoute>,
+                loader: () => fetch('./serviceCenter.json')
+            },
+            {
+                path: '/be-a-rider',
+                element: <ProtectedRoute> <BeARider /> </ProtectedRoute>
+            },
+            {
+                path: '/profile',
+                element: <ProtectedRoute> <Profile /> </ProtectedRoute>
+            },
+            {
+                path: '/addParcel',
+                element: <ProtectedRoute> <AddParcel /> </ProtectedRoute>,
+                loader: () => fetch('./serviceCenter.json')
+            },
         ]
     },
     { path: '/signIn', Component: SignIn },

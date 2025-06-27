@@ -55,13 +55,11 @@ const Header = () => {
 
     const links = (
         <>
-            {['/', '/track-order', '/coverage', '/about-us', '/pricing', '/be-a-rider'].map((path, i) => {
+            {['/', '/addParcel', '/coverage', '/be-a-rider'].map((path, i) => {
                 const label = {
                     '/': 'Home',
-                    '/track-order': 'Track Order',
-                    '/about-us': 'About Us',
+                    '/addParcel': 'Add Parcel',
                     '/coverage': 'Coverage',
-                    '/pricing': 'Pricing',
                     '/be-a-rider': 'Be A Rider',
                 }[path];
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import beAmerchant from '../../assets/assets/be-a-merchant-bg.png';
+import beAmerchant from '../../assets/assets/be-a-merchant-bg.png'
 import locationMerchant from '../../assets/assets/location-merchant.png';
 
 const BeMerchant = () => {
