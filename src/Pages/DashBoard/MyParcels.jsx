@@ -3,7 +3,7 @@
 import React, { useContext, useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Package, CreditCard, Eye, Trash2, Grid3X3, Table, Search, MoreHorizontal, CheckCircle, XCircle, DollarSign, LogIn, Loader2, } from "lucide-react"
-import { AuthContext } from "../Provider/AuthProvider"
+import { AuthContext } from "../../Provider/AuthProvider"
 import { toast } from "sonner"
 import Swal from 'sweetalert2';
 import { useNavigate } from "react-router"
@@ -163,7 +163,7 @@ const getTypeColor = (type) => {
     }
 }
 
-const Dashboard = () => {
+const MyParcels = () => {
     const { user } = useContext(AuthContext)
     const [parcels, setParcels] = useState([])
     const [viewMode, setViewMode] = useState("cards")
@@ -205,7 +205,9 @@ const Dashboard = () => {
     }
 
     const handleView = (id) => console.log(`View parcel ${id}`)
-    const handlePay = (id) => console.log(`Pay for parcel ${id}`)
+    const handlePay = (id) => {
+        navigate(`/dashboard/payment/${id}`)
+    }
 
     const handleDelete = async (id) => {
         const result = await Swal.fire({
@@ -650,4 +652,4 @@ const Dashboard = () => {
     )
 }
 
-export default Dashboard;
+export default MyParcels;

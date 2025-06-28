@@ -6,7 +6,7 @@ import {
     GoogleAuthProvider,
     sendPasswordResetEmail,
     signInWithEmailAndPassword,
-    signInWithPopup
+    signInWithPopup,
 } from 'firebase/auth';
 import { auth } from '../Firebase/Firebase.init';
 import { toast } from 'sonner';
@@ -33,6 +33,7 @@ const SignIn = ({ onRegister }) => {
     const [showPassword, setShowPassword] = useState(false);
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
+    const [role, setRole] = useState('user'); // store role here if you want
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -63,6 +64,7 @@ const SignIn = ({ onRegister }) => {
             displayName: user.displayName || '',
             photoURL: user.photoURL || '',
             lastSignInTime: user.metadata?.lastSignInTime || '',
+            role: 'user',
         };
         try {
             const existingUser = await axios.get(`http://localhost:3000/users/${user.email}`);
@@ -79,13 +81,39 @@ const SignIn = ({ onRegister }) => {
         }
     };
 
+    // NEW helper: call backend login and fetch role
+    const backendLoginAndFetchRole = async (email) => {
+        try {
+            console.log('Logging in user to backend:', email);
+            await axios.post(
+                'http://localhost:3000/login',
+                { email },
+                { withCredentials: true }
+            );
+            console.log('Backend login successful');
+
+            const roleRes = await axios.get(`http://localhost:3000/role/${email}`);
+            const fetchedRole = roleRes.data.role || 'user';
+            console.log('Fetched user role:', fetchedRole);
+            setRole(fetchedRole);
+        } catch (error) {
+            console.error('Backend login or role fetch failed:', error);
+            setRole('user');
+        }
+    };
+
     const handleGoogleLogin = async () => {
         setLoading(true);
         const provider = new GoogleAuthProvider();
         try {
             const result = await signInWithPopup(auth, provider);
             const user = result.user;
+
             await sendUserToBackend(user);
+
+            // Call backend login + fetch role
+            await backendLoginAndFetchRole(user.email);
+
             toast.success('Successfully logged in with Google');
             navigate(from, { replace: true });
         } catch (error) {
@@ -120,15 +148,21 @@ const SignIn = ({ onRegister }) => {
         try {
             const result = await signInWithEmailAndPassword(auth, email, password);
             const user = result.user;
+
             await sendUserToBackend(user);
+
+            // Update lastSignInTime
             await axios.patch('http://localhost:3000/users', {
                 email,
                 lastSignInTime: user.metadata?.lastSignInTime,
             });
+
+            // Call backend login + fetch role
+            await backendLoginAndFetchRole(email);
+
             toast.success('Successfully logged in.');
             navigate(from, { replace: true });
         } catch (error) {
-            setLoading(false);
             if (error.code === 'auth/user-not-found') {
                 setErrors({ email: 'No user found with this email' });
                 toast.error('No user found with this email');
@@ -138,6 +172,8 @@ const SignIn = ({ onRegister }) => {
             } else {
                 toast.error(error.message || 'Failed to sign in. Please try again.');
             }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -187,7 +223,8 @@ const SignIn = ({ onRegister }) => {
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="Email"
                                 required
-                                className={`w-full px-4 py-3 border rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 ${errors.email ? 'border-red-500 focus:ring-red-300' : 'border-gray-300 focus:ring-green-500'} transition`}
+                                className={`w-full px-4 py-3 border rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 ${errors.email ? 'border-red-500 focus:ring-red-300' : 'border-gray-300 focus:ring-green-500'
+                                    } transition`}
                             />
                             {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                         </motion.div>
@@ -202,7 +239,8 @@ const SignIn = ({ onRegister }) => {
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder="Password"
                                     required
-                                    className={`w-full px-4 py-3 pr-12 border rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 ${errors.password ? 'border-red-500 focus:ring-red-300' : 'border-gray-300 focus:ring-green-500'} transition`}
+                                    className={`w-full px-4 py-3 pr-12 border rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 ${errors.password ? 'border-red-500 focus:ring-red-300' : 'border-gray-300 focus:ring-green-500'
+                                        } transition`}
                                 />
                                 <button
                                     type="button"
@@ -219,7 +257,7 @@ const SignIn = ({ onRegister }) => {
                         <motion.div variants={fadeVariant} custom={3} className="text-left">
                             <button
                                 type="button"
-                                // onClick={() => navigate('/forgetPassword')}
+                                onClick={handleResetPassword}
                                 className="text-sm text-green-600 hover:text-green-700 font-medium"
                             >
                                 Forget Password?
@@ -234,7 +272,8 @@ const SignIn = ({ onRegister }) => {
                             whileTap={{ scale: 0.98 }}
                             variants={fadeVariant}
                             custom={4}
-                            className={`w-full ${loading ? 'bg-green-400' : 'bg-green-500 hover:bg-green-600'} text-white font-semibold py-4 px-6 rounded-lg transition-all duration-200`}
+                            className={`w-full ${loading ? 'bg-green-400' : 'bg-green-500 hover:bg-green-600'
+                                } text-white font-semibold py-4 px-6 rounded-lg transition-all duration-200`}
                         >
                             {loading ? 'Signing in...' : 'Sign In'}
                         </motion.button>
@@ -242,7 +281,11 @@ const SignIn = ({ onRegister }) => {
                         {/* Register Redirect */}
                         <motion.div className="text-center" variants={fadeVariant} custom={5}>
                             <span className="text-gray-600">Don't have an account? </span>
-                            <Link to="/signUp" onClick={onRegister} className="text-green-600 hover:text-green-700 font-medium">
+                            <Link
+                                to="/signUp"
+                                onClick={onRegister}
+                                className="text-green-600 hover:text-green-700 font-medium"
+                            >
                                 Register
                             </Link>
                         </motion.div>
@@ -265,9 +308,16 @@ const SignIn = ({ onRegister }) => {
                             whileTap={{ scale: 0.97 }}
                             variants={fadeVariant}
                             custom={7}
-                            className={`w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-4 px-6 rounded-lg flex items-center justify-center space-x-3 border border-gray-300 ${loading ? 'opacity-70' : ''}`}
+                            className={`w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-4 px-6 rounded-lg flex items-center justify-center space-x-3 border border-gray-300 ${loading ? 'opacity-70' : ''
+                                }`}
                         >
-                            <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg
+                                width="21"
+                                height="20"
+                                viewBox="0 0 21 20"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
                                 <g clipPath="url(#clip0)">
                                     <path d="M20.5 10.23c0-.68-.06-1.36-.18-2.03H10.7v3.85h5.51c-.23 1.24-.96 2.34-2.04 3.04v2.5h3.29c1.93-1.74 3.04-4.31 3.04-7.36z" fill="#1C71FF" />
                                     <path d="M10.7 20c2.75 0 5.07-.89 6.76-2.41l-3.29-2.5c-.91.6-2.09.95-3.47.95-2.66 0-4.91-1.76-5.72-4.14H1.58v2.58C3.31 17.87 6.84 20 10.7 20z" fill="#34A853" />

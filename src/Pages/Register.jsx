@@ -69,6 +69,7 @@ const Register = () => {
             displayName: user.displayName || '',
             photoURL: user.photoURL || '',
             lastSignInTime: user.metadata?.lastSignInTime || '',
+            role: 'user',
         };
         try {
             const existingUser = await axios.get(`http://localhost:3000/users/${user.email}`);

@@ -490,7 +490,7 @@ const AddParcel = () => {
                     <motion.div className="mt-8" variants={itemVariants}>
                         <button
                             type="submit"
-                            className="bg-green-400 hover:bg-green-500 text-gray-800 font-semibold py-4 px-8 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                            className="bg-[#CAEB66] hover:bg-[#bbd274] cursor-pointer text-gray-800 font-semibold py-4 px-8 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                         >
                             Proceed to Confirm Booking
                         </button>

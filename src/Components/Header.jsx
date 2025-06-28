@@ -55,11 +55,12 @@ const Header = () => {
 
     const links = (
         <>
-            {['/', '/addParcel', '/coverage', '/dashboard'].map((path, i) => {
+            {['/', '/addParcel', '/coverage', '/beArider', '/dashboard'].map((path, i) => {
                 const label = {
                     '/': 'Home',
                     '/addParcel': 'Add Parcel',
                     '/coverage': 'Coverage',
+                    '/beArider': 'Be A Rider',
                     '/dashboard': 'Dashboard',
                 }[path];
 
@@ -108,12 +109,12 @@ const Header = () => {
                 </Link>
 
                 {/* Desktop Nav */}
-                <div className="hidden lg:flex items-center gap-10 text-[#1F1F1F] font-semibold">
+                <div className="hidden xl:flex items-center gap-10 text-[#1F1F1F] font-semibold">
                     {links}
                 </div>
 
                 {/* Right Side Buttons */}
-                <div className="hidden lg:flex items-center gap-3 urbanist relative">
+                <div className="hidden xl:flex items-center gap-3 urbanist relative">
                     {!loading && (
                         !user ? (
                             <div className="flex gap-2">
@@ -190,11 +191,11 @@ const Header = () => {
                                             </Link>
 
                                             <Link
-                                                to="/be-a-rider"
+                                                to="/paymentHistory"
                                                 onClick={() => setDropdownOpen(false)}
                                                 className="block px-4 py-2 text-[#1F1F1F] hover:bg-[#f6f9ef] hover:text-[#2f3e16] transition"
                                             >
-                                                Be A Rider
+                                                Payment History
                                             </Link>
 
                                             <button onClick={handleLogout} className="block px-4 py-2 text-[#1F1F1F] hover:bg-[#fffafa] hover:text-[#2f3e16] transition w-full text-left rounded-b-lg">
@@ -210,7 +211,7 @@ const Header = () => {
 
                 {/* Mobile Menu Icon */}
                 <motion.div
-                    className="lg:hidden"
+                    className="xl:hidden"
                     whileTap={{ scale: 0.9 }}
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -227,7 +228,7 @@ const Header = () => {
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        className="bg-white rounded-xl shadow-md mt-2 px-6 py-4 lg:hidden flex flex-col gap-4 text-[#1F1F1F] font-semibold overflow-hidden"
+                        className="bg-white rounded-xl shadow-md mt-2 px-6 py-4 xl:hidden flex flex-col gap-4 text-[#1F1F1F] font-semibold overflow-hidden"
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
