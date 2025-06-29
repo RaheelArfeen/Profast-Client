@@ -23,6 +23,7 @@ import BeARider from "../Pages/BeARider";
 import AssignRider from "../Pages/DashBoard/AssignRider";
 import PendingRiders from "../Pages/DashBoard/PendingRider";
 import ActiveRiders from "../Pages/DashBoard/ActiveRiders";
+import DashboardHome from "../Pages/DashBoard/DashboardHome";
 
 export const router = createBrowserRouter([
     {
@@ -87,6 +88,11 @@ export const router = createBrowserRouter([
             </ProtectedRoute>
         ),
         children: [
+            {
+                index: true,
+                path: "/dashboard",
+                element: <DashboardHome/>
+            },
             {
                 path: "myParcels",
                 element: (

@@ -4,7 +4,6 @@ import {
     FaHome,
     FaBoxOpen,
     FaMoneyCheckAlt,
-    FaUserEdit,
     FaSearchLocation,
     FaUserCheck,
     FaUserClock,
@@ -13,61 +12,131 @@ import {
 } from 'react-icons/fa';
 import useUserRole from '../hooks/useUserRole';
 import logo from '../assets/assets/logo.png';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const containerVariants = {
+    hidden: {},
+    visible: {
+        transition: {
+            staggerChildren: 0.12,
+        },
+    },
+};
+
+const slideUpFade = {
+    hidden: { opacity: 0, y: 10 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
+};
 
 const DashboardLayout = () => {
     const { role, roleLoading } = useUserRole();
     const [isOpen, setIsOpen] = React.useState(false);
 
+    const [isLargeScreen, setIsLargeScreen] = React.useState(window.innerWidth >= 1024);
+    React.useEffect(() => {
+        const handleResize = () => setIsLargeScreen(window.innerWidth >= 1024);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     return (
         <div className="flex h-screen overflow-hidden">
             {/* Sidebar */}
-            <div className={`fixed z-30 inset-y-0 left-0 w-64 bg-gray-100 border-r transform ${isOpen ? "translate-x-0" : "-translate-x-full"} transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:inset-0`}>
-                <div className="flex items-center px-4 py-4 border-b">
-                    <Link to="/" className="flex items-center gap-2">
-                        <img src={logo} alt="Logo" className="w-10" />
-                        <h1 className="text-2xl font-extrabold">Profast</h1>
-                    </Link>
-                </div>
-                <nav className="flex flex-col px-4 py-6 space-y-2 text-gray-800">
-                    <NavLink to="/dashboard" className="flex items-center gap-2 px-2 py-2 rounded hover:bg-gray-200">
-                        <FaHome /> Home
-                    </NavLink>
-                    <NavLink to="/dashboard/myParcels" className="flex items-center gap-2 px-2 py-2 rounded hover:bg-gray-200">
-                        <FaBoxOpen /> My Parcels
-                    </NavLink>
-                    <NavLink to="/dashboard/paymentHistory" className="flex items-center gap-2 px-2 py-2 rounded hover:bg-gray-200">
-                        <FaMoneyCheckAlt /> Payment History
-                    </NavLink>
-                    <NavLink to="/dashboard/track" className="flex items-center gap-2 px-2 py-2 rounded hover:bg-gray-200">
-                        <FaSearchLocation /> Track a Package
-                    </NavLink>
+            <AnimatePresence>
+                {(isOpen || isLargeScreen) && (
+                    <motion.nav
+                        initial="hidden"
+                        animate="visible"
+                        exit="hidden"
+                        variants={slideUpFade}
+                        className="fixed z-30 inset-y-0 left-0 w-64 bg-gray-100 border-r lg:static lg:inset-0"
+                    >
+                        <motion.div
+                            className="flex items-center px-4 py-4 border-b"
+                            variants={slideUpFade}
+                            initial="hidden"
+                            animate="visible"
+                        >
+                            <Link to="/" className="flex items-center gap-2">
+                                <img src={logo} alt="Logo" className="w-10" />
+                                <h1 className="text-2xl font-extrabold relative top-3 right-7">Profast</h1>
+                            </Link>
+                        </motion.div>
 
-                    {!roleLoading && role === 'admin' && (
-                        <>
-                            <NavLink to="/dashboard/assign-rider" className="flex items-center gap-2 px-2 py-2 rounded hover:bg-gray-200">
-                                <FaMotorcycle /> Assign Rider
-                            </NavLink>
-                            <NavLink to="/dashboard/active-riders" className="flex items-center gap-2 px-2 py-2 rounded hover:bg-gray-200">
-                                <FaUserCheck /> Active Riders
-                            </NavLink>
-                            <NavLink to="/dashboard/pending-riders" className="flex items-center gap-2 px-2 py-2 rounded hover:bg-gray-200">
-                                <FaUserClock /> Pending Riders
-                            </NavLink>
-                            <NavLink to="/dashboard/makeAdmin" className="flex items-center gap-2 px-2 py-2 rounded hover:bg-gray-200">
-                                <FaUserShield /> Make Admin
-                            </NavLink>
-                        </>
-                    )}
-                </nav>
-            </div>
+                        {/* Nav container with stagger */}
+                        <motion.nav
+                            className="flex flex-col px-4 py-6 space-y-2 text-gray-800"
+                            variants={containerVariants}
+                            initial="hidden"
+                            animate="visible"
+                        >
+                            {[
+                                { to: "/dashboard", icon: <FaHome />, label: "Home" },
+                                { to: "/dashboard/myParcels", icon: <FaBoxOpen />, label: "My Parcels" },
+                                { to: "/dashboard/paymentHistory", icon: <FaMoneyCheckAlt />, label: "Payment History" },
+                                { to: "/dashboard/track", icon: <FaSearchLocation />, label: "Track a Package" },
+                            ].map(({ to, icon, label }) => (
+                                <NavLink
+                                    key={to}
+                                    to={to}
+                                    className="flex items-center gap-2 px-2 py-2 rounded hover:bg-gray-200"
+                                >
+                                    {({ isActive }) => (
+                                        <motion.div
+                                            variants={slideUpFade}
+                                            style={{ fontWeight: isActive ? 'bold' : 'normal' }}
+                                            className="flex items-center gap-2 w-full"
+                                        >
+                                            {icon} {label}
+                                        </motion.div>
+                                    )}
+                                </NavLink>
+                            ))}
+
+                            {!roleLoading && role === 'admin' && (
+                                <>
+                                    {[
+                                        { to: "/dashboard/assign-rider", icon: <FaMotorcycle />, label: "Assign Rider" },
+                                        { to: "/dashboard/active-riders", icon: <FaUserCheck />, label: "Active Riders" },
+                                        { to: "/dashboard/pending-riders", icon: <FaUserClock />, label: "Pending Riders" },
+                                        { to: "/dashboard/makeAdmin", icon: <FaUserShield />, label: "Make Admin" },
+                                    ].map(({ to, icon, label }) => (
+                                        <NavLink
+                                            key={to}
+                                            to={to}
+                                            className="flex items-center gap-2 px-2 py-2 rounded hover:bg-gray-200"
+                                        >
+                                            {({ isActive }) => (
+                                                <motion.div
+                                                    variants={slideUpFade}
+                                                    style={{ fontWeight: isActive ? 'bold' : 'normal' }}
+                                                    className="flex items-center gap-2 w-full"
+                                                >
+                                                    {icon} {label}
+                                                </motion.div>
+                                            )}
+                                        </NavLink>
+                                    ))}
+                                </>
+                            )}
+                        </motion.nav>
+                    </motion.nav>
+                )}
+            </AnimatePresence>
 
             {/* Main Content */}
             <div className="flex-1 flex flex-col">
                 {/* Topbar for mobile */}
-                <div className="lg:hidden flex items-center justify-between px-4 py-3 border-b bg-white shadow-md">
+                <motion.div
+                    className="lg:hidden flex items-center justify-between px-4 py-3 border-b bg-white shadow-md"
+                    initial="hidden"
+                    animate="visible"
+                    variants={slideUpFade}
+                >
                     <button
                         onClick={() => setIsOpen(!isOpen)}
                         className="text-gray-600 focus:outline-none"
+                        aria-label="Toggle sidebar"
                     >
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
@@ -75,12 +144,17 @@ const DashboardLayout = () => {
                     </button>
                     <h2 className="text-xl font-bold">Dashboard</h2>
                     <div></div> {/* Empty div for alignment */}
-                </div>
+                </motion.div>
 
                 {/* Outlet Content */}
-                <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
+                <motion.div
+                    className="flex-1 overflow-y-auto p-4 bg-gray-50"
+                    initial="hidden"
+                    animate="visible"
+                    variants={slideUpFade}
+                >
                     <Outlet />
-                </div>
+                </motion.div>
             </div>
         </div>
     );

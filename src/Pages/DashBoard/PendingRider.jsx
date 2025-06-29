@@ -69,42 +69,46 @@ const PendingRiders = () => {
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
-                            {riders.map((rider) => (
-                                <tr key={rider._id} className="hover:bg-gray-50">
-                                    <td className="px-4 py-2">{rider.name}</td>
-                                    <td className="px-4 py-2">{rider.email}</td>
-                                    <td className="px-4 py-2">{rider.region}</td>
-                                    <td className="px-4 py-2">{rider.district}</td>
-                                    <td className="px-4 py-2">{rider.phone}</td>
-                                    <td className="px-4 py-2">
-                                        {new Date(rider.created_at).toLocaleDateString()}
-                                    </td>
-                                    <td className="px-4 py-2 flex gap-2">
-                                        <button
-                                            onClick={() => setSelectedRider(rider)}
-                                            className="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-                                        >
-                                            <FaEye />
-                                        </button>
-                                        <button
-                                            onClick={() =>
-                                                handleDecision(rider._id, "approve", rider.email)
-                                            }
-                                            className="px-2 py-1 bg-green-600 text-white rounded hover:bg-green-700"
-                                        >
-                                            <FaCheck />
-                                        </button>
-                                        <button
-                                            onClick={() =>
-                                                handleDecision(rider._id, "reject", rider.email)
-                                            }
-                                            className="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700"
-                                        >
-                                            <FaTimes />
-                                        </button>
+                            {riders.length === 0 ? (
+                                <tr>
+                                    <td colSpan="8" className="px-4 py-5 text-center text-gray-500 italic text-lg">
+                                        No matching riders found.
                                     </td>
                                 </tr>
-                            ))}
+                            ) : (
+                                riders.map((rider) => (
+                                    <tr key={rider._id} className="hover:bg-gray-50">
+                                        <td className="px-4 py-2">{rider.name}</td>
+                                        <td className="px-4 py-2">{rider.email}</td>
+                                        <td className="px-4 py-2">{rider.region}</td>
+                                        <td className="px-4 py-2">{rider.district}</td>
+                                        <td className="px-4 py-2">{rider.phone}</td>
+                                        <td className="px-4 py-2">
+                                            {new Date(rider.created_at).toLocaleDateString()}
+                                        </td>
+                                        <td className="px-4 py-2 flex gap-2">
+                                            <button
+                                                onClick={() => setSelectedRider(rider)}
+                                                className="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                            >
+                                                <FaEye />
+                                            </button>
+                                            <button
+                                                onClick={() => handleDecision(rider._id, "approve", rider.email)}
+                                                className="px-2 py-1 bg-green-600 text-white rounded hover:bg-green-700"
+                                            >
+                                                <FaCheck />
+                                            </button>
+                                            <button
+                                                onClick={() => handleDecision(rider._id, "reject", rider.email)}
+                                                className="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700"
+                                            >
+                                                <FaTimes />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
                         </tbody>
                     </table>
                 </div>

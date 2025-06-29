@@ -191,11 +191,11 @@ const Header = () => {
                                             </Link>
 
                                             <Link
-                                                to="/paymentHistory"
+                                                to="/dashboard"
                                                 onClick={() => setDropdownOpen(false)}
                                                 className="block px-4 py-2 text-[#1F1F1F] hover:bg-[#f6f9ef] hover:text-[#2f3e16] transition"
                                             >
-                                                Payment History
+                                                Dashboard
                                             </Link>
 
                                             <button onClick={handleLogout} className="block px-4 py-2 text-[#1F1F1F] hover:bg-[#fffafa] hover:text-[#2f3e16] transition w-full text-left rounded-b-lg">
