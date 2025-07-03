@@ -72,11 +72,11 @@ const Register = () => {
             role: 'user',
         };
         try {
-            const existingUser = await axios.get(`http://localhost:3000/users/${user.email}`);
+            const existingUser = await axios.get(`https://profast-server.onrender.com/users/${user.email}`);
             if (existingUser.status === 200 && existingUser.data?.email === user.email) return true;
         } catch {
             try {
-                const res = await axios.post('http://localhost:3000/users', userData);
+                const res = await axios.post('https://profast-server.onrender.com/users', userData);
                 if (res.status === 200 || res.status === 201) return true;
                 throw new Error('404 error cannot login');
             } catch {

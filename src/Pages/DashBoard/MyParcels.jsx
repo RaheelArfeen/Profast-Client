@@ -177,7 +177,7 @@ const MyParcels = () => {
                 setLoading(true);
                 try {
 
-                    const res = await fetch(`http://localhost:3000/parcels?email=${user.email}`, {
+                    const res = await fetch(`https://profast-server.onrender.com/parcels?email=${user.email}`, {
                         method: "GET",
                         headers: {
                             "Content-Type": "application/json",
@@ -232,7 +232,7 @@ const MyParcels = () => {
 
         if (result.isConfirmed) {
             try {
-                const res = await fetch(`http://localhost:3000/parcels/${id}`, {
+                const res = await fetch(`https://profast-server.onrender.com/parcels/${id}`, {
                     method: 'DELETE',
                 });
 

@@ -17,7 +17,7 @@ const ForgetPassword = () => {
     const navigate = useNavigate();
 
     // Update with your backend URL
-    const backendUrl = 'http://localhost:3000';
+    const backendUrl = 'https://profast-server.onrender.com';
 
     const handleSendCode = async (e) => {
         e.preventDefault();

@@ -43,7 +43,7 @@ const AuthProvider = ({ children }) => {
     setLoading(true);
     try {
       // Clear backend JWT cookie
-      await axios.post("http://localhost:3000/logout", {}, { withCredentials: true });
+      await axios.post("https://profast-server.onrender.com/logout", {}, { withCredentials: true });
       // Sign out Firebase
       await signOut(auth);
       setUser(null);
@@ -65,13 +65,13 @@ const AuthProvider = ({ children }) => {
 
           // Send login request to backend to set JWT cookie
           await axios.post(
-            "http://localhost:3000/login",
+            "https://profast-server.onrender.com/login",
             { email },
             { withCredentials: true }
           );
 
           // Fetch role from backend
-          const roleRes = await axios.get(`http://localhost:3000/users/role/${email}`);
+          const roleRes = await axios.get(`https://profast-server.onrender.com/users/role/${email}`);
           const role = roleRes.data.role || "user";
 
           const userDatas = { displayName, email, photoURL, uid, role, accessToken };
